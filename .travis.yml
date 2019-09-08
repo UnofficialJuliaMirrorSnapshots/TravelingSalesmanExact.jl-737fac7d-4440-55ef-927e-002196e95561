@@ -3,10 +3,15 @@ language: julia
 os:
   - linux
   - osx
+  - windows
 julia:
   - 1.0
   - 1.1
+  - 1.2
   - nightly
+branches: # build master branch + PRs
+  only:
+  - master
 matrix:
   allow_failures:
     - julia: nightly
@@ -17,7 +22,7 @@ codecov: true
 jobs:
   include:
     - stage: Documentation
-      julia: 1.1
+      julia: 1.0
       script: julia --project=docs -e '
           using Pkg;
           Pkg.develop(PackageSpec(path=pwd()));

@@ -35,14 +35,6 @@ function test_tour(input, opt = TravelingSalesmanExact.get_default_optimizer(); 
     return t, c
 end
 
-@testset "att48.tsp" begin
-    cities = simple_parse_tsp(joinpath(@__DIR__, "att48.tsp"))
-    sym_tour, sym_cost = test_tour(cities; distance = TravelingSalesmanExact.ATT, verbose = true)
-    @test sym_cost ≈ 10628
-
-    asym_tour, asym_cost = test_tour(cities; distance = TravelingSalesmanExact.ATT, symmetric = false)
-    @test asym_cost ≈ 10628 
-end
 
 @testset "Small random asymmetric" begin
     # chosen via rand(5,5)
@@ -63,7 +55,7 @@ end
     cost_sym = cost + transpose(cost)
     t4, c4 = test_tour(cost_sym; verbose = false)
     t5, c5 = test_tour(cost_sym; symmetric = true, verbose = false)
-    t6, c6 = test_tour(cost_sym; symmetric = false, verbose = false)
+    t6, c6 = test_tour(cost_sym; symmetric = false, verbose = true)
     @test c4 ≈ c5    
     @test c5 ≈ c6
 end
@@ -91,4 +83,13 @@ end
     TravelingSalesmanExact.reset_default_optimizer!()
     @test_throws ArgumentError test_tour(cost)
     set_default_optimizer!(with_optimizer(GLPK.Optimizer))
+end
+
+@testset "att48.tsp" begin
+    cities = simple_parse_tsp(joinpath(@__DIR__, "att48.tsp"))
+    sym_tour, sym_cost = test_tour(cities; distance = TravelingSalesmanExact.ATT, verbose = true)
+    @test sym_cost ≈ 10628
+
+    asym_tour, asym_cost = test_tour(cities; distance = TravelingSalesmanExact.ATT, symmetric = false)
+    @test asym_cost ≈ 10628 
 end
